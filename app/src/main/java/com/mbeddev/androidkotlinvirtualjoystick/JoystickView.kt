@@ -20,6 +20,11 @@ import kotlin.math.pow
 class JoystickView : SurfaceView, SurfaceHolder.Callback,
     View.OnTouchListener{
 
+    constructor(context: Context): super(context) {
+        setupJoystickView()
+        initWithoutAttrs()
+    }
+
     constructor(context: Context, attributes: AttributeSet): super(context, attributes) {
         setupJoystickView()
         initAttributes(context, attributes)
@@ -36,25 +41,28 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback,
     private var baseRadius: Float = 0F
     private var hatRadius: Float = 0F
 
+    var baseColor: Int = Color.parseColor("#303F9F")
     private var baseA: Int = 0
     private var baseR: Int = 0
     private var baseG: Int = 0
     private var baseB: Int = 0
 
+    var hatColor: Int = Color.parseColor("#5E5E92")
     private var hatA: Int = 0
     private var hatR: Int = 0
     private var hatG: Int = 0
     private var hatB: Int = 0
 
+    var stickShadeColor: Int = Color.parseColor("#afffff")
     private var stickShadeR: Int = 0
     private var stickShadeG: Int = 0
     private var stickShadeB: Int = 0
 
-    private var drawBase: Boolean = false
-    private var drawStick: Boolean = false
-    private var shadeHat: Boolean = false
+    var drawBase: Boolean = true
+    var drawStick: Boolean = true
+    var shadeHat: Boolean = true
 
-    private var ratio: Int = 0
+    var ratio: Int = 5
 
     @Nullable
     private lateinit var joystickListener: JoyStickListener
@@ -74,7 +82,7 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback,
         holder.setFormat(PixelFormat.TRANSPARENT)
     }
 
-    fun initAttributes(context: Context, attrs: AttributeSet) {
+    private fun initAttributes(context: Context, attrs: AttributeSet) {
         val a: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.JoystickView)
         val base = a.getColor(R.styleable.JoystickView_base_color, Color.parseColor("#303F9F"))
         val hat = a.getColor(R.styleable.JoystickView_hat_color, Color.parseColor("#5E5E92"))
@@ -102,6 +110,23 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback,
         drawBase = a.getBoolean(R.styleable.JoystickView_draw_base, true)
 
         a.recycle()
+    }
+
+    private fun initWithoutAttrs() {
+        // Conversion from int to ARGB value
+        baseA = baseColor shr 24 and 0xff
+        baseR = baseColor shr 16 and 0xff
+        baseG = baseColor shr 8 and 0xff
+        baseB = baseColor and 0xff
+
+        hatA = hatColor shr 24 and 0xff
+        hatR = hatColor shr 16 and 0xff
+        hatG = hatColor shr 8 and 0xff
+        hatB = hatColor and 0xff
+
+        stickShadeR = stickShadeColor shr 16 and 0xff
+        stickShadeG = stickShadeColor shr 8 and 0xff
+        stickShadeB = stickShadeColor and 0xff
     }
 
     private fun drawJoystick(newX: Float, newY: Float) {
