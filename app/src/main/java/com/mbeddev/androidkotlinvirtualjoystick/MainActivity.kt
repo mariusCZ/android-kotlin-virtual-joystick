@@ -2,10 +2,11 @@ package com.mbeddev.androidkotlinvirtualjoystick
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnLayout
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), JoystickView.JoyStickListener {
 
     companion object {
         // Global screen dimensions.
@@ -22,6 +23,15 @@ class MainActivity : AppCompatActivity() {
         cLayout.doOnLayout {
             screenHeight = it.measuredHeight
             screenWidth = it.measuredWidth
+        }
+
+        val joystick: JoystickView = findViewById(R.id.my_joystick)
+        joystick.setJoystickListener(this)
+    }
+
+    override fun onJoystickMoved(xPercent: Float, yPercent: Float, id: Int) {
+        if(id == R.id.my_joystick) {
+            Log.d("app", "joystick moved")
         }
     }
 }

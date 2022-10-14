@@ -1,0 +1,11 @@
+<resources>
+    <declare-styleable name="JoystickView">
+        <attr name="base_color" format="reference|color" />
+        <attr name="hat_color" format="reference|color" />
+        <attr name="stick_shade_color" format="reference|color" />
+        <attr name="draw_base" format="boolean" />
+        <attr name="draw_stick_shading" format="boolean" />
+        <attr name="draw_hat_shading" format="boolean" />
+        <attr name="ratio" format="integer" />
+    </declare-styleable>
+</resources>
